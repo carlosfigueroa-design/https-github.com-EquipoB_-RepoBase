@@ -55,6 +55,23 @@ export async function createApi(
   }
 }
 
+/** POST /apis/from-spec — Crear API desde spec OpenAPI con IA (Admin) */
+export async function createApiFromSpec(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  if (requireAdmin(req, res)) return;
+  try {
+    const spec = req.body as Record<string, unknown>;
+    const userId = req.user!.userId;
+    const api = await lifecycleService.createApiFromSpec(spec, userId);
+    res.status(201).json(api);
+  } catch (err) {
+    next(err);
+  }
+}
+
 /** PATCH /apis/:id/status — Cambiar estado de API (Admin) */
 export async function changeStatus(
   req: AuthenticatedRequest,
