@@ -1,19 +1,58 @@
-# 🏦 RepoBase 
+# 🏢 Vínculo Bolívar — Portal de APIs Empresarial (SIOP)
 
-Este repositorio es la **plantilla base (template)** oficial para los proyectos en Seguros Bolívar. Está diseñado para garantizar que cada microservicio o aplicación frontend nazca con los estándares de seguridad, arquitectura y calidad exigidos.
+Portal web que centraliza, documenta y permite la exploración interactiva de las APIs internas de Seguros Bolívar.
 
-## 🚀 Inicio Rápido
+## Módulos
 
-1.  En la página de este repositorio en GitHub, haz clic en el botón **"Use this template"**.
-2.  Crea tu nuevo repositorio.
-3.  Clona el nuevo proyecto en tu máquina local.
+| Módulo | Descripción | Acceso |
+|--------|-------------|--------|
+| 📚 Catálogo de APIs | Exploración visual de 28+ APIs con búsqueda en tiempo real | Público |
+| 📖 Visor Swagger | Documentación técnica interactiva OpenAPI 3.0 | Autenticado |
+| 🧪 Sandbox | Ejecución de llamadas simuladas con respuestas mock | Autenticado |
+| 🤖 Asistente IA | Chat con respuestas sobre APIs y ejemplos cURL | Autenticado |
+| ⚙️ Ciclo de Vida | Gestión de estados de APIs con auditoría | Admin |
+| 📊 Analítica | Métricas de uso, engagement y negocio | Admin |
+| 📡 Observabilidad | APM, RUM, CNM, NPM | Admin |
 
-## 🔐 Requisitos de Seguridad (Obligatorio)
+## Stack
 
-Este proyecto utiliza el registro privado **JFrog Artifactory**. Para instalar dependencias, **DEBES** configurar tu token personal en tu entorno local. 
+- **Frontend**: Angular 19 Standalone + @seguros-bolivar/ui-bundle
+- **Backend**: Node.js 20 + Express 4 + TypeScript
+- **Datos**: JSON files en `/data` (sin BD)
+- **Auth**: JWT + OTP simulado
 
-### Configuración en Mac (Zsh)
-Añade la siguiente línea a tu archivo `~/.zshrc`:
+## Inicio Rápido
 
 ```bash
-export JFROG_AUTH_TOKEN="TU_TOKEN_PERSONAL_AQUÍ"
+# Backend
+cd backend && npm install && npx ts-node src/app.ts
+
+# Frontend (otra terminal)
+cd frontend && npm install && npx ng serve --proxy-config proxy.conf.json
+```
+
+Abrir http://localhost:4200
+
+## Credenciales
+
+| Email | Rol | OTP |
+|-------|-----|-----|
+| admin@segurosbolivar.com | Admin | 123456 |
+| demo@segurosbolivar.com | Externo | 123456 |
+
+## Documentación
+
+Toda la documentación del proyecto está en [`docs/proyecto/`](docs/proyecto/):
+
+- [Resumen Ejecutivo](docs/proyecto/resumen-ejecutivo.md)
+- [Estructura del Proyecto](docs/proyecto/estructura-proyecto.md)
+- [Alcances Actuales](docs/proyecto/alcances-actuales.md)
+- [Backlog](docs/proyecto/backlog.md)
+- [ADRs](docs/proyecto/adrs.md)
+- [Glosario](docs/proyecto/glosario.md)
+- [Estructura de Archivos](docs/proyecto/estructura-archivos.md)
+- [Épicas e Historias de Usuario](docs/proyecto/epicas-hu.md)
+
+## Equipo
+
+Equipo B — Hackathon Kiro Abril 2026

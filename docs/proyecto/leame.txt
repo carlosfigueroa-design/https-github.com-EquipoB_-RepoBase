@@ -1,0 +1,50 @@
+PORTAL DE APIs EMPRESARIAL — PROYECTO SIOP
+Seguros Bolívar — Hackathon Abril 2026
+==========================================
+
+QUE ES
+------
+Portal web que centraliza y documenta las APIs internas de Seguros Bolivar.
+Permite explorar un catalogo de 28+ APIs, ver documentacion Swagger interactiva,
+probar APIs en un sandbox simulado, consultar un asistente de IA y gestionar
+el ciclo de vida de las APIs.
+
+COMO EJECUTAR
+-------------
+1. Instalar dependencias:
+   cd backend && npm install
+   cd frontend && npm install
+
+2. Iniciar backend (puerto 3000):
+   cd backend && npx ts-node src/app.ts
+
+3. Iniciar frontend (puerto 4200):
+   cd frontend && npx ng serve --proxy-config proxy.conf.json
+
+4. Abrir en navegador:
+   http://localhost:4200
+
+CREDENCIALES DE ACCESO
+----------------------
+Email: admin@segurosbolivar.com (rol Admin)
+Email: demo@segurosbolivar.com (rol Externo)
+Codigo OTP: 123456
+
+TECNOLOGIAS
+-----------
+Frontend: Angular 19, TypeScript, @seguros-bolivar/ui-bundle
+Backend: Node.js 20, Express 4, TypeScript
+Datos: Archivos JSON en /data (sin base de datos)
+Auth: JWT con jsonwebtoken
+Tests: Jest, Supertest
+
+ESTRUCTURA
+----------
+/backend    - API REST con Express
+/frontend   - Aplicacion Angular
+/data       - Archivos JSON con datos mock
+/docs       - Documentacion del proyecto
+
+EQUIPO
+------
+Equipo B — Hackathon Kiro Abril 2026
