@@ -36,6 +36,12 @@ export class LifecycleService {
     return this.http.post<ApiCatalogItem>(API_CONFIG.lifecycle.create, data);
   }
 
+  createApiFromSpec(spec: unknown): Observable<ApiCatalogItem & { aiAnalysis: Record<string, unknown> }> {
+    return this.http.post<ApiCatalogItem & { aiAnalysis: Record<string, unknown> }>(
+      `${API_CONFIG.lifecycle.create}/from-spec`, spec
+    );
+  }
+
   changeStatus(apiId: string, newStatus: string): Observable<ApiCatalogItem> {
     return this.http.patch<ApiCatalogItem>(API_CONFIG.lifecycle.changeStatus(apiId), { newStatus });
   }
