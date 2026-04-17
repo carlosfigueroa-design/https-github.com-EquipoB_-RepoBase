@@ -42,6 +42,12 @@ import { AuthService } from '../../core/services/auth.service';
               <span>Analítica</span>
             </a>
           </li>
+          <li>
+            <a routerLink="/admin/observability" routerLinkActive="active" class="nav-link">
+              <i class="fa-solid fa-satellite-dish"></i>
+              <span>Observabilidad</span>
+            </a>
+          </li>
         </ng-container>
       </ul>
 

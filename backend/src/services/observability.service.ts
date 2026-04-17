@@ -1,0 +1,119 @@
+import { JsonStoreService } from './json-store.service';
+
+export interface ObservabilityData {
+  apm: ApmData;
+  rum: RumData;
+  cnm: CnmData;
+  npm: NpmData;
+}
+
+export interface ApmData {
+  services: ApmService[];
+  topErrors: ApmError[];
+  errorAnalysis: ErrorAnalysis[];
+  responseTrend: Record<string, unknown>[];
+}
+
+export interface ApmService {
+  name: string;
+  status: 'ok' | 'warn' | 'alert';
+  avgResponseMs: number;
+  errorCount: number;
+  requestCount: number;
+  uptime: number;
+}
+
+export interface ApmError {
+  code: string;
+  message: string;
+  count: number;
+  service: string;
+  lastOccurrence: string;
+}
+
+export interface ErrorAnalysis {
+  errorCode: string;
+  rootCause: string;
+  solution: string;
+  severity: 'low' | 'medium' | 'high';
+  affectedUsers: number;
+}
+
+export interface RumData {
+  flows: RumFlow[];
+}
+
+export interface RumFlow {
+  name: string;
+  status: 'ok' | 'warn' | 'alert';
+  availabilityMinutes: number;
+  unavailabilityMinutes: number;
+  availabilityPct: number;
+  totalTests: number;
+  passed: number;
+  failed: number;
+  avgExecutionMs: number;
+  avgStepMs: number;
+  passRate: number;
+  failRate: number;
+}
+
+export interface CnmData {
+  zones: CnmZone[];
+  connections: CnmConnection[];
+  totalContainers: number;
+  healthyContainers: number;
+  overallStatus: 'ok' | 'warn' | 'alert';
+}
+
+export interface CnmZone {
+  name: string;
+  status: 'ok' | 'warn' | 'alert';
+  containers: number;
+  healthyContainers: number;
+  latencyMs: number;
+}
+
+export interface CnmConnection {
+  from: string;
+  to: string;
+  status: 'ok' | 'warn' | 'alert';
+  latencyMs: number;
+  packetLoss: number;
+}
+
+export interface NpmData {
+  availability: {
+    uptimeMinutes: number;
+    downtimeMinutes: number;
+    uptimePct: number;
+    totalIncidents: number;
+    activeIncidents: number;
+  };
+  latency: {
+    current: number;
+    avg24h: number;
+    p95: number;
+    p99: number;
+    trend: { time: string; value: number }[];
+  };
+  packetLoss: {
+    current: number;
+    avg24h: number;
+    max24h: number;
+  };
+  serviceThroughput: {
+    service: string;
+    inboundMbps: number;
+    outboundMbps: number;
+    status: 'ok' | 'warn' | 'alert';
+  }[];
+}
+
+export class ObservabilityService {
+  constructor(private store: JsonStoreService) {}
+
+  async getDashboard(): Promise<ObservabilityData> {
+    return this.store.read<ObservabilityData>('observability.json');
+  }
+}

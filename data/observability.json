@@ -1,0 +1,181 @@
+{
+  "apm": {
+    "services": [
+      { "name": "api-gateway", "status": "ok", "avgResponseMs": 45, "errorCount": 3, "requestCount": 12450, "uptime": 99.97 },
+      { "name": "auth-service", "status": "ok", "avgResponseMs": 78, "errorCount": 12, "requestCount": 8920, "uptime": 99.85 },
+      { "name": "catalog-service", "status": "warn", "avgResponseMs": 234, "errorCount": 47, "requestCount": 15230, "uptime": 99.69 },
+      { "name": "sandbox-service", "status": "ok", "avgResponseMs": 156, "errorCount": 8, "requestCount": 4523, "uptime": 99.82 },
+      { "name": "notification-service", "status": "alert", "avgResponseMs": 1250, "errorCount": 189, "requestCount": 3210, "uptime": 94.11 },
+      { "name": "billing-service", "status": "ok", "avgResponseMs": 92, "errorCount": 5, "requestCount": 6780, "uptime": 99.93 },
+      { "name": "ai-assistant-service", "status": "warn", "avgResponseMs": 890, "errorCount": 34, "requestCount": 2150, "uptime": 98.42 }
+    ],
+    "topErrors": [
+      { "code": "TIMEOUT_EXCEEDED", "message": "Request timeout after 30s", "count": 89, "service": "notification-service", "lastOccurrence": "2026-04-17T14:32:00Z" },
+      { "code": "DB_CONNECTION_POOL", "message": "Connection pool exhausted", "count": 47, "service": "catalog-service", "lastOccurrence": "2026-04-17T13:45:00Z" },
+      { "code": "RATE_LIMIT_HIT", "message": "Rate limit exceeded for OpenAI API", "count": 34, "service": "ai-assistant-service", "lastOccurrence": "2026-04-17T12:20:00Z" },
+      { "code": "AUTH_TOKEN_EXPIRED", "message": "JWT token expired during request", "count": 12, "service": "auth-service", "lastOccurrence": "2026-04-17T11:55:00Z" },
+      { "code": "PAYLOAD_TOO_LARGE", "message": "Request body exceeds 10MB limit", "count": 8, "service": "sandbox-service", "lastOccurrence": "2026-04-17T10:30:00Z" }
+    ],
+    "errorAnalysis": [
+      {
+        "errorCode": "TIMEOUT_EXCEEDED",
+        "rootCause": "El servicio de notificaciones depende de un proveedor SMTP externo con latencia alta. Bajo carga, las conexiones se acumulan y superan el timeout de 30s.",
+        "solution": "1. Implementar cola de mensajes (SQS/RabbitMQ) para desacoplar el envío. 2. Aumentar timeout a 60s como medida temporal. 3. Agregar circuit breaker para el proveedor SMTP.",
+        "severity": "high",
+        "affectedUsers": 156
+      },
+      {
+        "errorCode": "DB_CONNECTION_POOL",
+        "rootCause": "El pool de conexiones PostgreSQL está configurado con max=10, insuficiente para el tráfico actual del catálogo. Queries lentas bloquean conexiones.",
+        "solution": "1. Aumentar pool max a 25. 2. Optimizar queries del catálogo con índices en campos de búsqueda. 3. Implementar caché Redis para consultas frecuentes.",
+        "severity": "medium",
+        "affectedUsers": 89
+      },
+      {
+        "errorCode": "RATE_LIMIT_HIT",
+        "rootCause": "El plan actual de OpenAI permite 60 RPM. En horas pico, las consultas al asistente IA superan este límite.",
+        "solution": "1. Implementar cola de requests con retry exponencial. 2. Cachear respuestas frecuentes. 3. Evaluar upgrade del plan de OpenAI.",
+        "severity": "medium",
+        "affectedUsers": 34
+      }
+    ],
+    "responseTrend": [
+      { "time": "08:00", "gateway": 42, "auth": 65, "catalog": 180, "sandbox": 120, "notification": 450 },
+      { "time": "09:00", "gateway": 48, "auth": 72, "catalog": 210, "sandbox": 145, "notification": 780 },
+      { "time": "10:00", "gateway": 55, "auth": 85, "catalog": 290, "sandbox": 160, "notification": 1100 },
+      { "time": "11:00", "gateway": 50, "auth": 80, "catalog": 250, "sandbox": 155, "notification": 1350 },
+      { "time": "12:00", "gateway": 43, "auth": 70, "catalog": 200, "sandbox": 130, "notification": 900 },
+      { "time": "13:00", "gateway": 40, "auth": 68, "catalog": 195, "sandbox": 125, "notification": 650 },
+      { "time": "14:00", "gateway": 47, "auth": 75, "catalog": 240, "sandbox": 150, "notification": 1250 }
+    ]
+  },
+  "rum": {
+    "flows": [
+      {
+        "name": "Login + OTP",
+        "status": "ok",
+        "availabilityMinutes": 1425,
+        "unavailabilityMinutes": 15,
+        "availabilityPct": 98.96,
+        "totalTests": 288,
+        "passed": 279,
+        "failed": 9,
+        "avgExecutionMs": 3200,
+        "avgStepMs": 640,
+        "passRate": 96.88,
+        "failRate": 3.12
+      },
+      {
+        "name": "Consulta Catálogo",
+        "status": "ok",
+        "availabilityMinutes": 1438,
+        "unavailabilityMinutes": 2,
+        "availabilityPct": 99.86,
+        "totalTests": 288,
+        "passed": 286,
+        "failed": 2,
+        "avgExecutionMs": 1800,
+        "avgStepMs": 450,
+        "passRate": 99.31,
+        "failRate": 0.69
+      },
+      {
+        "name": "Ejecución Sandbox",
+        "status": "warn",
+        "availabilityMinutes": 1390,
+        "unavailabilityMinutes": 50,
+        "availabilityPct": 96.53,
+        "totalTests": 288,
+        "passed": 261,
+        "failed": 27,
+        "avgExecutionMs": 5400,
+        "avgStepMs": 900,
+        "passRate": 90.63,
+        "failRate": 9.37
+      },
+      {
+        "name": "Asistente IA",
+        "status": "alert",
+        "availabilityMinutes": 1310,
+        "unavailabilityMinutes": 130,
+        "availabilityPct": 90.97,
+        "totalTests": 288,
+        "passed": 234,
+        "failed": 54,
+        "avgExecutionMs": 8900,
+        "avgStepMs": 2225,
+        "passRate": 81.25,
+        "failRate": 18.75
+      },
+      {
+        "name": "Gestión Ciclo de Vida API",
+        "status": "ok",
+        "availabilityMinutes": 1435,
+        "unavailabilityMinutes": 5,
+        "availabilityPct": 99.65,
+        "totalTests": 288,
+        "passed": 284,
+        "failed": 4,
+        "avgExecutionMs": 2600,
+        "avgStepMs": 520,
+        "passRate": 98.61,
+        "failRate": 1.39
+      }
+    ]
+  },
+  "cnm": {
+    "zones": [
+      { "name": "us-east-1a", "status": "ok", "containers": 12, "healthyContainers": 12, "latencyMs": 2.1 },
+      { "name": "us-east-1b", "status": "ok", "containers": 10, "healthyContainers": 10, "latencyMs": 2.4 },
+      { "name": "us-east-1c", "status": "warn", "containers": 8, "healthyContainers": 7, "latencyMs": 5.8 }
+    ],
+    "connections": [
+      { "from": "api-gateway", "to": "auth-service", "status": "ok", "latencyMs": 1.2, "packetLoss": 0.0 },
+      { "from": "api-gateway", "to": "catalog-service", "status": "ok", "latencyMs": 1.8, "packetLoss": 0.01 },
+      { "from": "api-gateway", "to": "sandbox-service", "status": "ok", "latencyMs": 2.1, "packetLoss": 0.0 },
+      { "from": "api-gateway", "to": "notification-service", "status": "alert", "latencyMs": 45.3, "packetLoss": 2.3 },
+      { "from": "catalog-service", "to": "postgres-primary", "status": "warn", "latencyMs": 8.5, "packetLoss": 0.05 },
+      { "from": "auth-service", "to": "redis-cache", "status": "ok", "latencyMs": 0.8, "packetLoss": 0.0 },
+      { "from": "ai-assistant-service", "to": "openai-api", "status": "warn", "latencyMs": 120.5, "packetLoss": 0.1 }
+    ],
+    "totalContainers": 30,
+    "healthyContainers": 29,
+    "overallStatus": "warn"
+  },
+  "npm": {
+    "availability": {
+      "uptimeMinutes": 1410,
+      "downtimeMinutes": 30,
+      "uptimePct": 97.92,
+      "totalIncidents": 4,
+      "activeIncidents": 1
+    },
+    "latency": {
+      "current": 12.5,
+      "avg24h": 15.3,
+      "p95": 45.2,
+      "p99": 120.8,
+      "trend": [
+        { "time": "08:00", "value": 10.2 },
+        { "time": "09:00", "value": 12.8 },
+        { "time": "10:00", "value": 18.5 },
+        { "time": "11:00", "value": 22.1 },
+        { "time": "12:00", "value": 15.3 },
+        { "time": "13:00", "value": 13.1 },
+        { "time": "14:00", "value": 12.5 }
+      ]
+    },
+    "packetLoss": {
+      "current": 0.02,
+      "avg24h": 0.05,
+      "max24h": 2.3
+    },
+    "serviceThroughput": [
+      { "service": "api-gateway", "inboundMbps": 45.2, "outboundMbps": 38.7, "status": "ok" },
+      { "service": "catalog-service", "inboundMbps": 22.1, "outboundMbps": 28.4, "status": "ok" },
+      { "service": "auth-service", "inboundMbps": 12.8, "outboundMbps": 10.2, "status": "ok" },
+      { "service": "notification-service", "inboundMbps": 8.5, "outboundMbps": 15.3, "status": "warn" },
+      { "service": "sandbox-service", "inboundMbps": 18.9, "outboundMbps": 22.1, "status": "ok" }
+    ]
+  }
+}

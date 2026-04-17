@@ -28,4 +28,7 @@ export const API_CONFIG = {
     dashboard: '/v1/api/analytics/dashboard',
     events: '/v1/api/analytics/events',
   },
+  observability: {
+    dashboard: '/v1/api/observability/dashboard',
+  },
 };

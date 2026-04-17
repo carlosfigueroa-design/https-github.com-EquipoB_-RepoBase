@@ -61,5 +61,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/analytics/analytics-dashboard.component').then((m) => m.AnalyticsDashboardComponent),
   },
+  {
+    path: 'admin/observability',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/observability/observability-dashboard.component').then((m) => m.ObservabilityDashboardComponent),
+  },
   { path: '**', redirectTo: 'catalog' },
 ];
